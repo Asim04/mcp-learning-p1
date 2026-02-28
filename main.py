@@ -1,18 +1,22 @@
 
 from mcp.server.fastmcp import FastMCP
+from fastapi import FastAPI
 
 # Initialize FastMCP server
 mcp = FastMCP(name="My FastMCP Server", stateless_http=True) # when true we dont need handshake or inilitaze thing. Enable stateless HTTP mode!  when stateless_http is True,  FastMCP will not maintain any session state for HTTP requests, making it more scalable and suitable for serverless environments.
 
+# 2. FastAPI instance banayein (Yeh error solve karega)
+mcp_app = FastAPI()
 
+# 3. FastMCP ko FastAPI ke saath jorein
 # Important: Get the FastAPI/Starlette app instance
-mcp_app = mcp.streamable_http_app() # Enable streamable HTTP app mode! when streamable_http_app is True, FastMCP will allow streaming responses for HTTP requests, enabling real-time data delivery and improved performance for long-running tasks.
+mcp_app.mount("/mcp", mcp.streamable_http_app()) # Enable streamable HTTP app mode! when streamable_http_app is True, FastMCP will allow streaming responses for HTTP requests, enabling real-time data delivery and improved performance for long-running tasks.
 
 
-@mcp_app.get("/")
+@app.get("/health")
 # async def root():
 #     return {"message": "Welcome to My FastMCP Server!"}
-async def home():
+async def health_check():
     return{
         "message": "Welcome to My FastMCP Server!",
         "tools": [
