@@ -13,6 +13,10 @@ mcp_app = FastAPI()
 mcp_app.mount("/mcp", mcp.streamable_http_app()) # Enable streamable HTTP app mode! when streamable_http_app is True, FastMCP will allow streaming responses for HTTP requests, enabling real-time data delivery and improved performance for long-running tasks.
 
 
+@mcp_app.get("/")
+async def root():
+    return {"message": "MCP Server is running! Use /health to check status."}
+
 @mcp_app.get("/health")
 # async def root():
 #     return {"message": "Welcome to My FastMCP Server!"}
